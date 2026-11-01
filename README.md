@@ -116,7 +116,7 @@ Projet E-commerce/
 │       ├── .env.example
 │       └── package.json
 │
-├── docker-compose.yml          # Lancement de la base de données (MongoDB)
+├── docker-compose.yml          # Lancement de PostgreSQL & MongoDB
 ├── package.json                # Scripts d'orchestration globaux
 └── .gitignore
 ```
@@ -129,10 +129,10 @@ Projet E-commerce/
 |---|---|---|
 | **Client Frontend** | `5173` | `react` (v18), `react-dom`, `react-router-dom`, `axios`, `lucide-react`, `vite` |
 | **API Gateway** | `5000` | `express`, `http-proxy-middleware`, `cors`, `helmet`, `morgan`, `dotenv`, `nodemon` |
-| **Auth Service** | `5001` | `express`, `jsonwebtoken`, `bcryptjs`, `mongoose`, `cors`, `dotenv`, `morgan`, `nodemon` |
-| **Product Service** | `5002` | `express`, `mongoose`, `cors`, `dotenv`, `morgan`, `nodemon` |
-| **Order Service** | `5003` | `express`, `axios` (appels inter-services), `mongoose`, `cors`, `dotenv`, `morgan`, `nodemon` |
-| **Payment Service** | `5004` | `express`, `stripe`, `mongoose`, `cors`, `dotenv`, `morgan`, `nodemon` |
+| **Auth Service** | `5001` | `express`, `jsonwebtoken`, `bcryptjs`, `pg` (PostgreSQL), `cors`, `dotenv`, `morgan`, `nodemon` |
+| **Product Service** | `5002` | `express`, `mongoose` (MongoDB - collection `catalog`), `pg` (PostgreSQL), `cors`, `dotenv`, `morgan`, `nodemon` |
+| **Order Service** | `5003` | `express`, `axios` (appels inter-services), `pg` (PostgreSQL), `cors`, `dotenv`, `morgan`, `nodemon` |
+| **Payment Service** | `5004` | `express`, `stripe`, `pg` (PostgreSQL), `cors`, `dotenv`, `morgan`, `nodemon` |
 
 ---
 

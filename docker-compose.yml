@@ -1,7 +1,19 @@
-version: '3.8'
-
 services:
-  # Base de données MongoDB commune ou distincte
+  # Base de données Relationnelle PostgreSQL
+  postgres:
+    image: postgres:16-alpine
+    container_name: ecommerce-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ecommerce_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  # Base de données NoSQL MongoDB
   mongo:
     image: mongo:latest
     container_name: ecommerce-mongo
@@ -12,4 +24,5 @@ services:
       - mongo-data:/data/db
 
 volumes:
+  postgres-data:
   mongo-data:
