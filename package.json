@@ -1,0 +1,13 @@
+{
+  "name": "projet-ecommerce",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Projet E-commerce avec architecture microservices",
+  "scripts": {
+    "install:all": "npm install --prefix client && npm install --prefix services/api-gateway && npm install --prefix services/auth-service && npm install --prefix services/product-service && npm install --prefix services/order-service && npm install --prefix services/payment-service",
+    "dev": "concurrently -n \"FRONT,GATEWAY,AUTH,PRODUCT,ORDER,PAYMENT\" -c \"blue,green,yellow,magenta,cyan,red\" \"npm run dev --prefix client\" \"npm run dev --prefix services/api-gateway\" \"npm run dev --prefix services/auth-service\" \"npm run dev --prefix services/product-service\" \"npm run dev --prefix services/order-service\" \"npm run dev --prefix services/payment-service\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
