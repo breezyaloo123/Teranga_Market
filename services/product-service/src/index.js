@@ -43,7 +43,7 @@ app.get('/api/products/:productId', async (req, res) => {
   }
 });
 
-//Create a new product
+//Route pour créer un nouveau produit
 app.post('/api/createproducts', async (req, res) => {
   try {
     const newProduct = new Catalog(req.body);
