@@ -152,6 +152,7 @@ Avant le premier lancement, créez le fichier de configuration du service produi
 ```powershell
 Copy-Item services\product-service\.env.example services\product-service\.env
 ```
+Le service produit ouvre une connexion à MongoDB et à PostgreSQL au démarrage. Vérifiez que `DATABASE_URL` dans ce fichier utilise le port et la base configurés dans `docker-compose.yml` (`localhost:5432/ecommerce_db`). Les routes actuelles du catalogue continuent d'utiliser MongoDB.
 
 ### 3. Lancer tous les services simultanément :
 ```bash
