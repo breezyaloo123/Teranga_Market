@@ -148,6 +148,11 @@ npm run install:all
 docker-compose up -d
 ```
 
+Avant le premier lancement, créez le fichier de configuration du service produit :
+```powershell
+Copy-Item services\product-service\.env.example services\product-service\.env
+```
+
 ### 3. Lancer tous les services simultanément :
 ```bash
 npm run dev
