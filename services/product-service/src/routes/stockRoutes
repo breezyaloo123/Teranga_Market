@@ -9,5 +9,4 @@ router.post('/stocks', stockController.addStock);
 router.put('/stocks/:productId/:warehouseId', stockController.updateStock);
 router.delete('/stocks/:productId/:warehouseId', stockController.deleteStock);
 
-
 module.exports = router;

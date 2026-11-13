@@ -26,13 +26,14 @@ app.use('/api', stockRoutes);
 app.use('/api', warehouseRoutes);
 
 
+
 // Démarrer le serveur après connexion à MongoDB
 const startServer = async () => {
   try {
     await connectDB();
     await connectPostgres();
     app.listen(PORT, () => {
-      console.log(`🚀 Product Service démarré sur http://localhost:${PORT}`);
+      console.log(`Product Service démarré sur http://localhost:${PORT}`);
     });
   } catch (error) {
     console.error('Impossible de démarrer le serveur :', error.message);
