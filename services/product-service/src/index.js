@@ -14,6 +14,7 @@ const { connectPostgres } = require('./config/postgres');
 const app = express();
 const PORT = process.env.PORT || 5002;
 
+
 app.use(express.json());
 
 // Routes pour le catalogue MongoDB

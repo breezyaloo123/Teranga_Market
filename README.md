@@ -130,7 +130,7 @@ Projet E-commerce/
 | **Client Frontend** | `5173` | `react` (v18), `react-dom`, `react-router-dom`, `axios`, `lucide-react`, `vite` |
 | **API Gateway** | `5000` | `express`, `http-proxy-middleware`, `cors`, `helmet`, `morgan`, `dotenv`, `nodemon` |
 | **Auth Service** | `5001` | `express`, `jsonwebtoken`, `bcryptjs`, `pg` (PostgreSQL), `cors`, `dotenv`, `morgan`, `nodemon` |
-| **Product Service** | `5002` | `express`, `mongoose` (MongoDB - collection `catalog`), `pg` (PostgreSQL), `cors`, `dotenv`, `morgan`, `nodemon` |
+| **Product Service** | `5002` | `express`, `graphql`, `graphql-http`, `mongoose` (MongoDB - collection `catalog`), `pg` (PostgreSQL), `cors`, `dotenv`, `morgan`, `nodemon` |
 | **Order Service** | `5003` | `express`, `axios` (appels inter-services), `pg` (PostgreSQL), `cors`, `dotenv`, `morgan`, `nodemon` |
 | **Payment Service** | `5004` | `express`, `stripe`, `pg` (PostgreSQL), `cors`, `dotenv`, `morgan`, `nodemon` |
 
@@ -153,6 +153,21 @@ Avant le premier lancement, créez le fichier de configuration du service produi
 Copy-Item services\product-service\.env.example services\product-service\.env
 ```
 Le service produit ouvre une connexion à MongoDB et à PostgreSQL au démarrage. Vérifiez que `DATABASE_URL` dans ce fichier utilise le port et la base configurés dans `docker-compose.yml` (`localhost:5432/ecommerce_db`). Les routes actuelles du catalogue continuent d'utiliser MongoDB.
+
+Le catalogue MongoDB est également accessible en GraphQL sur `http://localhost:5002/graphql` (les routes REST restent disponibles). Exemple de requête :
+```graphql
+query {
+  products {
+    id
+    product_id
+    name
+    category
+    price_cents
+    status
+    attributes
+  }
+}
+```
 
 ### 3. Lancer tous les services simultanément :
 ```bash

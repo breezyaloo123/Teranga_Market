@@ -16,8 +16,17 @@ const createRole = async (name, description) => {
 };
 
 
+const deleteRole = async (id) => {
+  const { rows } = await pool.query(
+    'DELETE FROM auth.roles WHERE id = $1 RETURNING id, name, description',
+    [id]
+  );
+  return rows[0];
+};
+
 
 module.exports = {
   getAllRoles,
-  createRole
+  createRole,
+  deleteRole
 };

@@ -9,5 +9,9 @@
   },
   "devDependencies": {
     "concurrently": "^9.1.0"
+  },
+  "dependencies": {
+    "graphql": "^17.1.0",
+    "ruru": "^2.0.3"
   }
 }
