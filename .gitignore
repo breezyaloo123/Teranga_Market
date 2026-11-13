@@ -11,8 +11,11 @@ npm-debug.log*
 # Builds
 dist/
 build/
+data/
 
 # Système & IDE
 .DS_Store
 .vscode/
 .idea/
+
+

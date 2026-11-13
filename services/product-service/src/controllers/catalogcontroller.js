@@ -1,4 +1,4 @@
-const Catalog = require('../models/Catalog');
+const Catalog = require('../models/catalog');
 
 const listProducts = async (_req, res) => {
   try {

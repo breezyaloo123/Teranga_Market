@@ -11,7 +11,10 @@
     "concurrently": "^9.1.0"
   },
   "dependencies": {
-    "graphql": "^17.1.0",
+    "@apollo/server": "^5.5.2",
+    "cors": "^2.8.6",
+    "graphql": "^16.15.0",
+    "jsonwebtoken": "^9.0.3",
     "ruru": "^2.0.3"
   }
 }
