@@ -7,6 +7,7 @@ const morgan = require('morgan');
 const pool = require('./config/db');
 const { authenticate } = require('./middleware/auth');
 const orderRoutes = require('./routes/orderRoutes');
+const { connectKafkaProducer, disconnectKafkaProducer } = require('./services/kafkaProducer');
 
 if (!process.env.JWT_SECRET) {
   console.error('JWT_SECRET manque : renseigne-le dans le fichier .env.');
@@ -28,8 +29,8 @@ app.get('/health', async (req, res) => {
   }
 });
 
-// Tout ce qui est sous /v1/orders exige d'abord un jeton valide, puis les rôles (dans les routes).
-app.use('/v1/orders', authenticate, orderRoutes);
+// Tout ce qui est sous /v1/orders ou /api/orders exige d'abord un jeton valide, puis les rôles (dans les routes).
+app.use(['/v1/orders', '/api/orders'], authenticate, orderRoutes);
 
 app.use((req, res) => res.status(404).json({ error: 'not_found', message: 'Route inconnue.' }));
 
@@ -41,4 +42,12 @@ app.use((err, req, res, next) => {
 });
 
 const port = Number(process.env.PORT || 5003);
-app.listen(port, () => console.log(`order-service à l'écoute sur le port ${port}`));
+app.listen(port, async () => {
+  console.log(`order-service à l'écoute sur le port ${port}`);
+  await connectKafkaProducer();
+});
+
+process.on('SIGINT', async () => {
+  await disconnectKafkaProducer();
+  process.exit(0);
+});

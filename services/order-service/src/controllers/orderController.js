@@ -56,4 +56,36 @@ async function getOrder(req, res, next) {
   }
 }
 
-module.exports = { listOrders, getOrder };
+const { publishOrderEvent } = require('../services/kafkaProducer');
+
+async function createOrder(req, res, next) {
+  try {
+    const { customer_id, total_cents, store_id, channel_id, payment_type, items } = req.body;
+    if (!customer_id || total_cents === undefined) {
+      return badRequest(res, 'customer_id et total_cents sont obligatoires.');
+    }
+
+    const orderId = req.body.order_id || `ORD-${Date.now()}`;
+    const newOrder = await orderModel.createOrder({
+      order_id: orderId,
+      customer_id,
+      store_id: store_id || 'STORE-01',
+      channel_id: channel_id || 'WEB',
+      payment_type: payment_type || 'credit_card',
+      total_cents,
+      items: items || [],
+    });
+
+    // 🚀 Émission asynchrone de l'événement vers Kafka
+    await publishOrderEvent('ORDER_CREATED', newOrder);
+
+    return res.status(201).json({
+      message: 'Commande enregistrée et événement Kafka émis',
+      order: newOrder,
+    });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+module.exports = { listOrders, getOrder, createOrder };

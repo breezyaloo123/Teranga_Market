@@ -37,4 +37,68 @@ async function getOrderById(orderId) {
   return { ...order, items: itemsResult.rows };
 }
 
-module.exports = { listOrders, getOrderById };
+async function createOrder({
+  order_id,
+  customer_id,
+  order_date,
+  store_id,
+  channel_id,
+  payment_type = 'credit_card',
+  status = 'preparing',
+  total_cents,
+  discount_cents = 0,
+  items = [],
+}) {
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    const orderDate = order_date || new Date().toISOString().slice(0, 10);
+    const dateObj = new Date(orderDate);
+    const year = dateObj.getFullYear();
+    const week = 1;
+
+    // 1. Insérer la commande dans la partition
+    const orderSql = `
+      INSERT INTO orders.orders (
+        order_id, customer_id, order_date, store_id, channel_id,
+        payment_type, status, total_cents, discount_cents, year, week
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+      RETURNING *
+    `;
+    const { rows: orderRows } = await client.query(orderSql, [
+      order_id, customer_id, orderDate, store_id, channel_id,
+      payment_type, status, total_cents, discount_cents, year, week
+    ]);
+
+    // 2. Insérer les lignes si spécifiées
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      const itemSql = `
+        INSERT INTO orders.order_items (
+          order_item_id, order_id, order_date, product_id, promo_id,
+          quantity, unit_price_cents, item_discount_cents
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      `;
+      await client.query(itemSql, [
+        item.order_item_id || `${order_id}-${i + 1}`,
+        order_id,
+        orderDate,
+        String(item.product_id),
+        item.promo_id || null,
+        item.quantity || 1,
+        item.unit_price_cents || 0,
+        item.item_discount_cents || 0,
+      ]);
+    }
+
+    await client.query('COMMIT');
+    return { ...orderRows[0], items };
+  } catch (err) {
+    await client.query('ROLLBACK');
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+module.exports = { listOrders, getOrderById, createOrder };
